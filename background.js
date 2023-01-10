@@ -53,7 +53,7 @@ function checkTemporarilyEnabled(temporarilyEnabled, doneHabitAt, freeTime) {
 
 function blockUrl(blocked, hostname) {
     if (Array.isArray(blocked) && blocked.find(domain => hostname.includes(domain))) {
-        var newURL = chrome.runtime.getURL('minder.html');
+        let newURL = chrome.runtime.getURL('minder.html');
         chrome.tabs.update(undefined, { url: newURL });
     }
 };
@@ -68,7 +68,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
             if (checkTemporarilyEnabled(s.temporarilyEnabled, s.doneHabitAt, s.freeTime)) {
                 blockUrl(s.blocked, hostname);
             } else {
-                var newURL = chrome.runtime.getURL('done.html');
+                let newURL = chrome.runtime.getURL('done.html');
                 chrome.tabs.update(undefined, { url: newURL });
             }
         });
@@ -89,29 +89,8 @@ chrome.tabs.onActivated.addListener(function (tab) {
 });
 
 function openMinderPage() {
-    var newURL = chrome.runtime.getURL('minder.html');
+    let newURL = chrome.runtime.getURL('minder.html');
     chrome.tabs.create({ url: newURL });
 };
 
 
-// chrome.tabs.onActivated.addListener(function (activeInfo) {
-//     chrome.tabs.query({}, function (tabs) {
-//         console.log(tabs)
-//         tabs.forEach(tab => {
-//             if (validateUrl(tab.url)) {
-//                 const hostname = new URL(tab.url).hostname;
-//                 chrome.storage.local.get(function (s) {
-//                     if (checkTemporarilyEnabled(s.temporarilyEnabled, s.doneHabitAt)){ return; }
-//                     if (Array.isArray(s.blocked) && s.blocked.find(domain => hostname.includes(domain))) {
-//                         if (tab.active){
-//                             console.log(tab.url);
-//                             // blockUrl(s.blocked, hostname);
-//                         }else{
-//                             chrome.tabs.remove(tab.id);
-//                         }
-//                     }
-//                 });
-//             }
-//         });
-//     });
-// });

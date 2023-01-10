@@ -1,4 +1,4 @@
-var minderModule = (function () {
+let minderModule = (function () {
 
     const url = "http://96.126.120.113:8000/graphql";
     const options = {
@@ -28,15 +28,13 @@ var minderModule = (function () {
     const $acceptBtn = $('#accept-habit');
     const $rejectBtn = $('#reject-habit');
 
-    const timerReadyClass = 'timer-ready';
-
-    var habitId;
-    var storage = {};
-    var initializeStorage = function (localStorage) {
+    let habitId;
+    let storage = {};
+    let initializeStorage = function (localStorage) {
         storage = localStorage;
     }
 
-    var getRandomHabitFromAPI = async function () {
+    let getRandomHabitFromAPI = async function () {
         addLoader($titleContent);
         try {
             let query = { "query": `query {habitToDo(userId:"${storage.user.id}"){id,message,timer_long,url_image,url_video,frequency,complementary_information}}` };
@@ -52,7 +50,7 @@ var minderModule = (function () {
         }
     }
 
-    var showHabit = async (res) => {
+    let showHabit = async (res) => {
         let item = res.data.habitToDo;
         if (!item.timer_long){
             location.reload();
@@ -80,7 +78,7 @@ var minderModule = (function () {
         }
     }
 
-    var acceptHabit = function () {
+    let acceptHabit = function () {
         $acceptBtn.on("click", function () {
             trackeHabit(habitId, 'Done', storage.user.id);
             let timer = $(this).data("timer");
@@ -90,16 +88,16 @@ var minderModule = (function () {
         });
     }
 
-    var rejectHabit = function () {
+    let rejectHabit = function () {
         $rejectBtn.on("click", function () {
             trackeHabit(habitId, 'Undone', storage.user.id);
             goToBlockedUrl();
         });
     }
 
-    var counter = function (counter = 5) {
+    let counter = function (counter = 5) {
         if (!counter) counter = 5;
-        var interval = setInterval(function () {
+        let interval = setInterval(function () {
             counter--;
             // Display 'counter' wherever you want to display it.
             if (counter <= 0) {
@@ -124,15 +122,15 @@ var minderModule = (function () {
         }, 1000);
     }
 
-    var addLoader = function ($content) {
+    let addLoader = function ($content) {
         $content.html('<i class="fa fa-spinner fa-spin"></i>');
     }
 
-    var goToBlockedUrl = function () {
-        window.location.href = "http://" + storage.blockedUrl, "_self";
+    let goToBlockedUrl = function () {
+        window.location.href = "http://" + storage.blockedUrl+ "_self";
     }
 
-    var temporarilyEnableUrls = function () {
+    let temporarilyEnableUrls = function () {
         if (storage.temporarilyEnabled.length == 0) {
             chrome.storage.local.set({ temporarilyEnabled: storage.blocked });
             chrome.storage.local.set({ blocked: [] });
@@ -142,7 +140,7 @@ var minderModule = (function () {
         }
     }
 
-    var trackeHabit = async function (habit, action, user) {
+    let trackeHabit = async function (habit, action, user) {
         try {
             let date = dateToDMY(new Date());
             options['body'] = `{
@@ -154,17 +152,15 @@ var minderModule = (function () {
                     "user":"${user}"
                 }}
             }`;
-            const response = await fetch(url, options);
-            const id = await response.json();
         } catch (error) {
             console.log(error);
         }
     }
 
-    var dateToDMY = function (date) {
-        var d = date.getDate();
-        var m = date.getMonth() + 1;
-        var y = date.getFullYear();
+    let dateToDMY = function (date) {
+        let d = date.getDate();
+        let m = date.getMonth() + 1;
+        let y = date.getFullYear();
         return '' + (d <= 9 ? '0' + d : d) + '-' + (m <= 9 ? '0' + m : m) + '-' + y;
     }
 
@@ -179,7 +175,7 @@ var minderModule = (function () {
 
 $(document).ready(function () {
     chrome.storage.local.get(function (data) {
-        storage = data;
+        let storage = data;
         init(storage);
     });
 });

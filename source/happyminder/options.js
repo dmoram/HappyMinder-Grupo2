@@ -1,4 +1,4 @@
-var optionsModule = (function () {
+let optionsModule = (function () {
 
     const url = "http://96.126.120.113:8000/graphql";
     const options = {
@@ -32,14 +32,14 @@ var optionsModule = (function () {
     const $freeTimeInput = $('#input-free-time');
     const $alertTimeInput = $('#input-alert-time');
 
-    var allUserCategories;
+    let allUserCategories;
 
-    var storage = {};
-    var initializeStorage = function (localStorage) {
+    let storage = {};
+    let initializeStorage = function (localStorage) {
         storage = localStorage;
     }
 
-    var showCategoriesMenu = function () {
+    let showCategoriesMenu = function () {
         $habitsMenu.show();
         $habitsBtn.removeClass(offBtnClass);
         $habitsBtn.addClass(onBtnClass);
@@ -57,7 +57,7 @@ var optionsModule = (function () {
         $formBtn.removeClass(onBtnClass);
     };
 
-    var showLinksMenu = function () {
+    let showLinksMenu = function () {
         $habitsMenu.hide();
         $habitsBtn.addClass(offBtnClass);
         $habitsBtn.removeClass(onBtnClass);
@@ -75,7 +75,7 @@ var optionsModule = (function () {
         $formBtn.removeClass(onBtnClass);
     };
 
-    var showProfileMenu = function () {
+    let showProfileMenu = function () {
         $habitsMenu.hide();
         $habitsBtn.addClass(offBtnClass);
         $habitsBtn.removeClass(onBtnClass);
@@ -93,7 +93,7 @@ var optionsModule = (function () {
         $formBtn.removeClass(onBtnClass);
     };
 
-    var showFormMenu = function () {
+    let showFormMenu = function () {
         $habitsMenu.hide();
         $habitsBtn.addClass(offBtnClass);
         $habitsBtn.removeClass(onBtnClass);
@@ -111,7 +111,7 @@ var optionsModule = (function () {
         $formBtn.addClass(onBtnClass);
     };
 
-    var loadContentByUser = function () {
+    let loadContentByUser = function () {
         if (storage.user) {
             $primaryContent.show();
             $loginContent.hide();
@@ -134,7 +134,7 @@ var optionsModule = (function () {
         }
     }
 
-    var createUser = async function () {
+    let createUser = async function () {
         try {
             let username = $('#username').val();
             if (username.length == 0) username = 'user';
@@ -152,7 +152,7 @@ var optionsModule = (function () {
         }
     }
 
-    var registerUserStorage = async (user) => {
+    let registerUserStorage = async (user) => {
         let idUser = user.data.createNewUser.id;
         let nameUser = user.data.createNewUser.user_name;
         chrome.storage.local.set({ user: { id: idUser, name: nameUser } }, function () {
@@ -161,7 +161,7 @@ var optionsModule = (function () {
         location.reload();
     }
 
-    var fetchCategories = async function () {
+    let fetchCategories = async function () {
         try {
             options['body'] = '{"query":"{desiredImpacts}"}';
             const response = await fetch(url, options);
@@ -185,7 +185,7 @@ var optionsModule = (function () {
         }
     }
 
-    var showCategories = async (categories) => {
+    let showCategories = async (categories) => {
         let items = [];
         let count = 1;
         $saveCategoryBtn.prop("disabled", false);
@@ -204,14 +204,14 @@ var optionsModule = (function () {
         $categoryList.html(items.join(''));
     };
 
-    var selectUserCategories = async (categories) => {
+    let selectUserCategories = async (categories) => {
         allUserCategories = categories.data.desiredImpactsByUser;
         categories.data.desiredImpactsByUser.forEach((category) => {
             $(`:checkbox[value="${category}"]`).prop('checked', true);
         });
     };
 
-    var saveCategoryUser = function () {
+    let saveCategoryUser = function () {
         let selectedCategories = [];
         $('.category-checkbox:checked').each(function (i) {
             selectedCategories[i] = $(this).val();
@@ -228,33 +228,29 @@ var optionsModule = (function () {
         $.notify("Guardado exitosamente", "success");
     };
 
-    var createHabitsUser = async function (user, category) {
+    let createHabitsUser = async function (user, category) {
         try {
             options['body'] = `{
                 "query":"mutation createHabitsUser ($input: HabitsDesiredImpactInput){createHabitsUser(input:$input)}",
                 "variables":{"input":{"user":"${user}","desiredImpact":"${category}"}}
             }`;
-            const response = await fetch(url, options);
-            const id = await response.json();
         } catch (error) {
             console.error(error);
         }
     }
 
-    var removeHabitsUser = async function (user, category) {
+    let removeHabitsUser = async function (user, category) {
         try {
             options['body'] = `{
                 "query":"mutation deleteHabitsUserByCategory ($input: HabitsDesiredImpactInput){deleteHabitsUserByCategory(input:$input)}",
                 "variables":{"input":{"user":"${user}","desiredImpact":"${category}"}}
             }`;
-            const response = await fetch(url, options);
-            const id = await response.json();
         } catch (error) {
             console.error(error);
         }
     }
 
-    var initializeUrlDataTable = function () {
+    let initializeUrlDataTable = function () {
         let items = [];
         storage.blocked.forEach(url => {
             items.push(`
@@ -278,19 +274,19 @@ var optionsModule = (function () {
         $('.remove-url').on("click", function () { removeUrl($(this).data('url')) });
     }
 
-    var saveUrl = function () {
-        var url = $urlInput.val();
+    let saveUrl = function () {
+        let url = $urlInput.val();
         url = url.replace("https://", "");
         url = url.replace("http://", "");
         url = url.replace("www.", "");
-        blockedUrl = storage.blocked;
+        let blockedUrl = storage.blocked;
         blockedUrl.push(url);
         chrome.storage.local.set({ blocked: blockedUrl });
         location.reload();
     };
 
-    var removeUrl = function (url) {
-        blockedUrl = storage.blocked;
+    let removeUrl = function (url) {
+        let blockedUrl = storage.blocked;
         const index = blockedUrl.indexOf(url);
         if (index > -1) {
             blockedUrl.splice(index, 1);
@@ -299,28 +295,28 @@ var optionsModule = (function () {
         location.reload();
     };
 
-    var initializeFreeTimeModal = function () {
+    let initializeFreeTimeModal = function () {
         $freeTimeInput.val(storage.freeTime)
     };
 
-    var updateFreeTime = function () {
+    let updateFreeTime = function () {
         const freeTime = $freeTimeInput.val();
         chrome.storage.local.set({ freeTime: freeTime });
         location.reload();
     };
 
-    var initializeAlertTimeModal = function () {
+    let initializeAlertTimeModal = function () {
         $alertTimeInput.val(storage.alertTime);
     };
 
-    var updateAlertTime = function () {
+    let updateAlertTime = function () {
         const alertTime = $alertTimeInput.val();
         chrome.storage.local.set({ alertTime: alertTime });
         location.reload();
     };
 
-    var tripettoForm = function () {
-        var tripetto = TripettoServices.init({
+    let tripettoForm = function () {
+        let tripetto = TripettoServices.init({
             token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiS0IrZnJXNENlRDZwYVFQdXZZb1lmcDZDdVRtUnNDVy9QWFI5c2RYR1lGMD0iLCJkZWZpbml0aW9uIjoiY0VpTmtSUU5WcUovdThtMHAwY2U3b3BwNnFyZUdPWVo3MlZiTmRVdytUND0iLCJ0eXBlIjoiY29sbGVjdCJ9.GH822_qVmo2etby6lxYPJoyjn-2kT0Fy4RuVor69spU"
         });
 
@@ -359,7 +355,7 @@ var optionsModule = (function () {
 
 $(document).ready(function () {
     chrome.storage.local.get(function (data) {
-        storage = data;
+        let storage = data;
         init(storage);
         optionsModule.tripettoForm();
     });
